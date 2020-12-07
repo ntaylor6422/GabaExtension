@@ -5,10 +5,15 @@
     "permissions": ["storage"],
     "content_scripts": [
         {
-            "matches": ["https://*.gaba.jp/*"],
+            "matches": ["https://*.gaba.jp/gis/statistics/*"],
             "js": ["detailsComp.js"]
+        },
+        {
+            "matches": ["https://*.gaba.jp/gis/booking/*"],
+            "js": ["booking.js"]
         }
     ],
+    "options_page": "options.html",
     "background": {
         "scripts": ["detailsComp.js"],
         "persistent": false
