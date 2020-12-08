@@ -1,9 +1,9 @@
+let peakCount = 0;
+let nonPeakCount = 0;
+
 function addButtons() {
     let buttonLocation = document.getElementsByClassName("calendar-view-header")[0];
     let siblingNode = buttonLocation.getElementsByClassName("calendar-nav")[0];
-    // let mirrorButton = document.createElement("BUTTON");
-    // mirrorButton.innerHTML = "Mirror Off"
-    // mirrorButton.setAttribute("class", "btn btn-success")
     let templateButton = document.createElement("BUTTON");
     templateButton.innerHTML = "Apply Template";
     templateButton.setAttribute("class", "btn btn-primary pull-left");
@@ -11,11 +11,54 @@ function addButtons() {
     templateButton.addEventListener("click", setTemplate);
 
 
-    // buttonLocation.insertBefore(mirrorButton, siblingNode)
-    buttonLocation.insertBefore(templateButton, siblingNode)
+    buttonLocation.insertBefore(templateButton, siblingNode);
+
+    let lessonContainer = document.createElement("TABLE");
+    lessonContainer.setAttribute("id", "lessonTable");
+
+    lessonContainer.innerHTML = `
+    <thead>
+        <th>Non Peak</th>
+        <th>Peak</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td id="lessonNumber"></td>
+            <td id="peakNumber"></td>
+        </tr>
+    </tbody>`
+    buttonLocation.appendChild(lessonContainer);
+    document.getElementById("lessonNumber").innerHTML = nonPeakCount;
+    document.getElementById("peakNumber").innerHTML = peakCount;
 }
 
+
 function setUpPage() {
+
+    let bodyEl = document.getElementsByTagName("BODY")[0];
+    let styleTag = document.createElement("STYLE");
+    let styleString = `#lessonTable {
+        border-collapse: collapse;
+        width: 15%;
+      }
+      
+      #lessonTable td, #lessonTable th {
+        border: 1px solid #ddd;
+        padding: 4px;
+      }
+      
+      
+      #lessonTable th {
+        padding-top: 6px;
+        padding-bottom: 6px;
+        text-align: center;
+        background-color: #2d766b;
+        color: white;
+      }`;
+
+      styleTag.innerHTML = styleString;
+      bodyEl.appendChild(styleTag);
+
     let days = document.getElementsByClassName("day");
     for(let i = 0; i < days.length; i++) {
         let day = days[i].getElementsByClassName("visible-desktop")[0].innerHTML
@@ -25,11 +68,25 @@ function setUpPage() {
         } else {
             days[i].classList.add(day);
         }
+        let lists = days[i].getElementsByTagName("LI");
+        for(let n = 1; n < lists.length; n++) {
+        
+            if(days[i].classList.contains("SUN") || days[i].classList.contains("SAT") || days[i].classList.contains("HOL") ) {
+                lists[n].classList.add("peak");
+            } else if(n < 4 || n > 14) {
+                lists[n].classList.add("peak");
+            } else {
+                lists[n].classList.add("nonPeak");
+            }
+
+            lists[n].addEventListener('click', function() {
+                sumLessons(this);
+            });
+        }
     }
 }
 
 function setTemplate() {
-    console.log("fired");
     chrome.storage.sync.get("Schedule", (item) => {
         for(day in item.Schedule) {
             let date = document.getElementsByClassName(day.toUpperCase());
@@ -44,6 +101,33 @@ function setTemplate() {
             }
         }
     })
+}
+
+function sumLessons(x) {
+
+
+    let classes = x.classList;
+    let checkCheck = x.lastElementChild.value;
+    console.log(checkCheck);
+
+    if(checkCheck) {
+        if(classes.contains("peak")) {
+            peakCount++;
+        } else {
+            nonPeakCount++;
+        }
+    } else {
+        if(classes.contains("peak")) {
+            peakCount--;
+        } else {
+            nonPeakCount--;
+        }
+    }
+    
+    document.getElementById("peakNumber").innerHTML = peakCount;
+    document.getElementById("lessonNumber").innerHTML = nonPeakCount;
+    document.getElementById("totals").innerHTML = totalLessonCount;
+
 }
 
 addButtons();
