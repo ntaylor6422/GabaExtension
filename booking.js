@@ -108,7 +108,6 @@ function sumLessons(x) {
 
     let classes = x.classList;
     let checkCheck = x.lastElementChild.value;
-    console.log(checkCheck);
 
     if(checkCheck) {
         if(classes.contains("peak")) {
@@ -126,7 +125,6 @@ function sumLessons(x) {
     
     document.getElementById("peakNumber").innerHTML = peakCount;
     document.getElementById("lessonNumber").innerHTML = nonPeakCount;
-    document.getElementById("totals").innerHTML = totalLessonCount;
 
 }
 

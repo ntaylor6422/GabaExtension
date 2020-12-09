@@ -151,6 +151,9 @@ function gatherData() {
 
 }
 
-paymentTable();
+function main() {
+    paymentTable();
+    hideTables();
+}
 
-hideTables();
+main();

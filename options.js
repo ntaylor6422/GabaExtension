@@ -29,7 +29,7 @@ function saveOptions() {
         FMBelt: fmBelt,
         Schedule: schedule
     }, () => {
-        alert("All Saved!");
+        toggleMessage("All settings have been saved");
     })
 }
 
@@ -58,12 +58,49 @@ function restoreOptions() {
             for(let n = 0; n < day.length; n++) {
                 if(items.Schedule[dayKeys[i]][n]) {
                     day[n].checked = true;
+                } else {
+                    day[n].checked = false;
                 }
             }
         }
     })
 }
 
-document.getElementById("save").addEventListener("click", saveOptions)
+function clearOptions() {
+
+    const schedule = {
+        "sun": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        "mon": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        "tue": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        "wed": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        "thu": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        "fri": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        "sat": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+        "hol": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    }
+
+    chrome.storage.sync.set({
+        Belt: "Belt A",
+        FMBelt: "Belt A",
+        Schedule: schedule
+    }, () => {
+        restoreOptions();
+        toggleMessage("All settings have been reset");
+    })
+}
+
+function toggleMessage(text) {
+    let alertEl = document.getElementById("alertElement");
+    alertEl.innerHTML = text;
+    alertEl.classList.remove("invisible")
+    alertEl.classList.add("visible");
+    setTimeout(function() {
+        alertEl.classList.remove("visible");
+        alertEl.classList.add("invisible");
+    }, 1500);
+}
+
+document.getElementById("clear").addEventListener("click", clearOptions);
+document.getElementById("save").addEventListener("click", saveOptions);
 
 restoreOptions();
