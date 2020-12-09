@@ -13,6 +13,18 @@
             "js": ["booking.js"]
         }
     ],
+    "browser_action": {
+        "default_popup": "options.html"
+      },
+      "commands": {
+        "_execute_browser_action": {
+          "suggested_key": {
+            "default": "Ctrl+Shift+O",
+            "mac": "MacCtrl+Shift+O"
+          },
+          "description": "Opens Options Page"
+        }
+      },
     "options_page": "options.html",
     "background": {
         "scripts": ["detailsComp.js"],
