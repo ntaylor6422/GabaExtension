@@ -6,11 +6,11 @@
     "content_scripts": [
         {
             "matches": ["https://*.gaba.jp/gis/statistics/*"],
-            "js": ["detailsComp.js"]
+            "js": ["tableGenerator.js","detailsComp.js"]
         },
         {
             "matches": ["https://*.gaba.jp/gis/booking/*"],
-            "js": ["booking.js"]
+            "js": ["tableGenerator.js","booking.js"]
         }
     ],
     "browser_action": {

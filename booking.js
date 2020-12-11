@@ -1,5 +1,9 @@
+//* Global Variables to update the count for peak and non-peak lessons
+
 let peakCount = 0;
 let nonPeakCount = 0;
+
+//* Adds a button to set the template, also creates the table for keeping track of lesson counts
 
 function addButtons() {
     let buttonLocation = document.getElementsByClassName("calendar-view-header")[0];
@@ -13,25 +17,21 @@ function addButtons() {
 
     buttonLocation.insertBefore(templateButton, siblingNode);
 
-    let lessonContainer = document.createElement("TABLE");
-    lessonContainer.setAttribute("id", "lessonTable");
 
-    lessonContainer.innerHTML = `
-    <thead>
-        <th>Non Peak</th>
-        <th>Peak</th>
-    </thead>
-    <tbody>
-        <tr>
-            <td id="lessonNumber"></td>
-            <td id="peakNumber"></td>
-        </tr>
-    </tbody>`
-    buttonLocation.appendChild(lessonContainer);
+    const tableDetails = {
+        "headers": ["Non-Peak", "Peak"],
+        "tdID": ["lessonNumber", "peakNumber"],
+        "tableAtts": {
+            "id": "lessonTable"
+        }
+    }
+
+    buttonLocation.appendChild(tableGenerator(1, tableDetails));
     document.getElementById("lessonNumber").innerHTML = nonPeakCount;
     document.getElementById("peakNumber").innerHTML = peakCount;
 }
 
+//* Adds all needed classes and properties to existing HTML elements on the page
 
 function setUpPage() {
 
@@ -86,6 +86,8 @@ function setUpPage() {
     }
 }
 
+//* Function called when the "Apply Template" button is clicked / Fetches the schedule object from Chrome Storage
+
 function setTemplate() {
     chrome.storage.sync.get("Schedule", (item) => {
         for(day in item.Schedule) {
@@ -102,6 +104,8 @@ function setTemplate() {
         }
     })
 }
+
+//* Updates the global variables for peak and non-peak on click
 
 function sumLessons(x) {
 
@@ -128,5 +132,9 @@ function sumLessons(x) {
 
 }
 
-addButtons();
-setUpPage();
+function main() {
+    addButtons();
+    setUpPage();
+}
+
+main();

@@ -3,6 +3,7 @@
     * will also add an event listener to the head of each table
     * this event listener triggers toggles the tables display
 */
+
 function hideTables() {
     let parent = document.getElementById("lessonStatisticsForm");
     let tableBody = parent.getElementsByTagName("TBODY");
@@ -15,6 +16,8 @@ function hideTables() {
     }
 }
 
+//* Simple toggle for displaying and hiding the tables
+
 function toggleTables(x) {
     if(x.nextElementSibling.style.display === "none") {
         x.nextElementSibling.style.display = "";
@@ -23,55 +26,29 @@ function toggleTables(x) {
     }
 }
 
+//* Creates the payment table / calls tableGenerator from tableGenerator.js
 
 function paymentTable() {
     let lessonStats = document.getElementById("lessonStatisticsForm");
+
+    const tableData = {
+        "headers": ["Non-Peak", "Peak", "FM", "LPA", "FL", "Seminar", "Total"],
+        "tdID": ["Lessons", "PeakLessons", "FMLessons", "LPALessons", "FLLessons", "SemLessons", "totals"],
+        "tableAtts": {
+            "class": "general full responsive-transpose-2col"
+        }
+    }
+
     let h2Node = lessonStats.getElementsByTagName("H2")[1];
-
-
-    let tableContainer = document.createElement("TABLE");
-    tableContainer.setAttribute("class", "general full responsive-transpose-2col");
-    let tableString = `<thead>
-        <th>Lesson Type</th>
-        <th>Payment</th>
-    </thead>
-    <tbody>
-        <tr>
-            <th>Lessons</th>
-            <td id="Lessons"></td>
-        </tr>
-        <tr>
-            <th>Peak Lessons</th>
-            <td id="PeakLessons"></td>
-        </tr>
-        <tr>
-            <th>FM Lessons</th>
-            <td id="FMLessons"></td>
-        </tr>
-        <tr>
-            <th>LPA Lessons</th>
-            <td id="LPALessons"></td>
-        </tr>
-        <tr>
-            <th>FL Lessons</th>
-            <td id="FLLessons"></td>
-        </tr>
-        <tr>
-            <th>Sem Lessons</th>
-            <td id="SemLessons"></td>
-        </tr>
-        <tr>
-            <th>Total</th>
-            <td id="totals"></td>
-        </tr>
-    </tbody>`
-    tableContainer.innerHTML = tableString;
-    lessonStats.insertBefore(tableContainer, h2Node);
+    lessonStats.insertBefore(tableGenerator(1, tableData), h2Node);
     
     gatherData();
 
 }
-
+/*
+    * Gets all needed information from the innerHTML on the page
+    * Calculates payment to populate the payment table
+*/
 function gatherData() {
 
     // * Get Belt Information from Chrome Storage
@@ -123,6 +100,7 @@ function gatherData() {
     let semData = semTable.getElementsByTagName("TD"); //Gets all table data
     let semNumber = parseInt(semData[3].innerHTML) + parseInt(semData[5].innerHTML); //contains the number of successful FMs
 
+//* Fetches belt information from Chrome Storage to calculate payment correctly
 
     chrome.storage.sync.get(["Belt", "FMBelt"], (keys) => { 
 
